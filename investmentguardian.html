@@ -1,0 +1,2181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>Market Oracle - Smart Investment Predictor</title>
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f8f9fa;
+        --bg-gradient: linear-gradient(135deg, #f0f4ff 0%, #faf5ff 100%);
+        --panel: #ffffff;
+        --panel-alt: #f8f9fa;
+        --accent: #6366f1;
+        --accent-hover: #4f46e5;
+        --accent-soft: rgba(99, 102, 241, 0.1);
+        --accent-strong: rgba(99, 102, 241, 0.2);
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --text-muted: #94a3b8;
+        --danger: #ef4444;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --border: rgba(0, 0, 0, 0.06);
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg-gradient);
+        background-attachment: fixed;
+        color: var(--text-primary);
+        min-height: 100vh;
+      }
+
+      header {
+        padding: 32px clamp(24px, 5vw, 64px) 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        background: transparent;
+        position: relative;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .user-menu {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        font-size: 14px;
+        color: var(--text-primary);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        color: white;
+        font-size: 15px;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .auth-btn {
+        padding: 12px 24px;
+        background: var(--accent);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: var(--shadow);
+      }
+
+      .auth-btn:hover {
+        background: var(--accent-hover);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .logout-btn {
+        padding: 6px 14px;
+        background: transparent;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 8px;
+        color: var(--danger);
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .logout-btn:hover {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: var(--danger);
+      }
+
+      header h1 {
+        font-size: clamp(24px, 4vw, 36px);
+        margin: 0;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+
+      header p {
+        margin: 0;
+        color: var(--text-secondary);
+        max-width: 680px;
+        line-height: 1.6;
+        font-size: 16px;
+      }
+
+      main {
+        padding: 0 clamp(24px, 5vw, 64px) 64px;
+        display: grid;
+        gap: 28px;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      section,
+      aside {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 28px;
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        transition: box-shadow 0.2s ease, transform 0.2s ease;
+      }
+
+      section:hover,
+      aside:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-2px);
+      }
+
+      .section-desc {
+        margin: -6px 0 6px;
+        color: var(--text-muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      h2 span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: var(--accent);
+        color: white;
+        font-size: 16px;
+        font-weight: 700;
+        margin-right: 12px;
+      }
+
+      h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+        display: flex;
+        align-items: center;
+      }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+      }
+
+      .summary-card {
+        background: var(--panel);
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+        transition: all 0.2s ease;
+      }
+
+      .summary-card:hover {
+        box-shadow: var(--shadow);
+        transform: translateY(-2px);
+      }
+
+      .summary-card h3 {
+        margin: 0 0 8px;
+        font-size: 14px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      .summary-card strong {
+        display: block;
+        font-size: 20px;
+      }
+
+      .summary-card p {
+        margin: 8px 0 0;
+        color: var(--text-secondary);
+        font-size: 13px;
+      }
+
+      .watchlist-form {
+        display: grid;
+        gap: 16px;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 120px;
+        gap: 12px;
+      }
+
+      .form-row input,
+      .form-row select {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px 18px;
+        color: var(--text-primary);
+        font-size: 15px;
+        transition: all 0.2s ease;
+      }
+
+      .form-row input:focus,
+      .form-row select:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-soft);
+      }
+
+      .watchlist-form button {
+        background: var(--accent);
+        border: none;
+        border-radius: 12px;
+        padding: 14px 24px;
+        font-weight: 600;
+        font-size: 15px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: var(--shadow);
+      }
+
+      .watchlist-form button:hover {
+        background: var(--accent-hover);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .watchlist-form button:active {
+        transform: translateY(0);
+      }
+
+      .watchlist {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .asset-card {
+        display: grid;
+        grid-template-columns: 28px 1fr minmax(120px, 150px);
+        align-items: center;
+        gap: 16px;
+        padding: 20px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: var(--panel);
+        position: relative;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.2s ease;
+      }
+
+      .asset-card:hover {
+        box-shadow: var(--shadow);
+        transform: translateY(-2px);
+        border-color: var(--accent-soft);
+      }
+
+      .asset-card .remove-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 28px;
+        height: 28px;
+        border: none;
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger);
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 1;
+        transition: all 0.2s ease;
+        z-index: 10;
+      }
+
+      .asset-card .remove-btn:hover {
+        background: rgba(239, 68, 68, 0.2);
+        transform: scale(1.1);
+      }
+
+      .asset-card .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        font-size: 14px;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: white;
+        background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .asset-card h3 {
+        margin: 0;
+        font-size: 16px;
+      }
+
+      .asset-card p {
+        margin: 4px 0 0;
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+
+      .signals {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+
+      .signals strong {
+        color: var(--text-primary);
+      }
+
+      .confidence-bar {
+        position: relative;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        overflow: hidden;
+        margin-top: 8px;
+      }
+
+      .confidence-bar span {
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--accent) 0%, #8b5cf6 100%);
+        transform-origin: left center;
+      }
+
+      .alert-feed {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .alert {
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        line-height: 1.6;
+        border: 1px solid var(--border);
+        background: var(--panel);
+        box-shadow: var(--shadow-sm);
+        transition: all 0.2s ease;
+      }
+
+      .alert:hover {
+        box-shadow: var(--shadow);
+        transform: translateY(-2px);
+      }
+
+      .alert-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+      }
+
+      .alert-header .emoji {
+        font-size: 18px;
+      }
+
+      .alert-meta {
+        display: flex;
+        gap: 12px;
+        color: var(--text-secondary);
+        font-size: 12px;
+      }
+
+      .alert strong {
+        color: var(--text-primary);
+      }
+
+      .autotrader-report {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .top-picks {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .top-pick-card {
+        padding: 18px;
+        border-radius: 16px;
+        border: 1px solid rgba(75, 179, 253, 0.16);
+        background: linear-gradient(
+            135deg,
+            rgba(75, 179, 253, 0.07),
+            transparent 70%
+          ),
+          rgba(17, 24, 33, 0.85);
+        display: grid;
+        gap: 12px;
+      }
+
+      .top-pick-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+        font-size: 15px;
+      }
+
+      .top-pick-header strong {
+        font-size: 17px;
+      }
+
+      .top-pick-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+
+      .progress-bars {
+        display: grid;
+        gap: 6px;
+      }
+
+      .progress-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+      }
+
+      .progress-row span {
+        flex: 0 0 140px;
+        color: var(--text-muted);
+      }
+
+      .progress-track {
+        flex: 1;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--accent) 0%, #8b5cf6 100%);
+      }
+
+      .reasoning {
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.5;
+      }
+
+      .action-zone {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 12px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .loading,
+      .empty-state {
+        text-align: center;
+        padding: 24px 0;
+        color: var(--text-muted);
+      }
+
+      footer {
+        padding: 32px clamp(16px, 5vw, 48px) 48px;
+        color: var(--text-muted);
+        font-size: 13px;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 16px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 600;
+        box-shadow: var(--shadow);
+      }
+
+      .tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 20px;
+      }
+
+      .modal-overlay.active {
+        display: flex;
+      }
+
+      .modal {
+        background: var(--panel);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 32px;
+        width: 100%;
+        max-width: 420px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        animation: modalSlideIn 0.3s ease;
+      }
+
+      @keyframes modalSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .modal-header {
+        margin-bottom: 24px;
+      }
+
+      .modal-header h2 {
+        margin: 0 0 8px;
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .modal-header p {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 14px;
+      }
+
+      .modal-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .modal-tab {
+        padding: 12px 20px;
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid transparent;
+        color: var(--text-secondary);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-bottom: -1px;
+      }
+
+      .modal-tab.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+      }
+
+      .modal-tab:hover {
+        color: var(--text-primary);
+      }
+
+      .modal-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .modal-form input {
+        width: 100%;
+        padding: 14px 18px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        color: var(--text-primary);
+        font-size: 15px;
+        transition: all 0.2s ease;
+      }
+
+      .modal-form input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-soft);
+      }
+
+      .modal-form button {
+        width: 100%;
+        padding: 14px;
+        background: var(--accent);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-weight: 600;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-top: 8px;
+        box-shadow: var(--shadow);
+      }
+
+      .modal-form button:hover {
+        background: var(--accent-hover);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .modal-form .error {
+        color: var(--danger);
+        font-size: 12px;
+        margin-top: -8px;
+      }
+
+      .modal-form .success {
+        color: var(--success);
+        font-size: 12px;
+        margin-top: -8px;
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: transparent;
+        color: var(--text-secondary);
+        font-size: 24px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+      }
+
+      .close-modal:hover {
+        background: var(--panel-alt);
+        color: var(--text-primary);
+      }
+
+      @media (max-width: 768px) {
+        .asset-card {
+          grid-template-columns: 24px 1fr;
+          gap: 12px;
+        }
+
+        .asset-card .signals {
+          grid-column: 1 / -1;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        .header-top {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+
+        .modal {
+          padding: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-top">
+        <div class="chip">Market Oracle</div>
+        <div class="user-menu" id="user-menu">
+          <div class="user-info" id="user-info" style="display: none;">
+            <div class="user-avatar" id="user-avatar"></div>
+            <span id="user-name"></span>
+            <button class="logout-btn" id="logout-btn">Logout</button>
+          </div>
+          <button class="auth-btn" id="auth-btn">Sign In</button>
+        </div>
+      </div>
+      <h1>Smart Investment Predictor &amp; Signal Monitor</h1>
+      <p>
+        Real-time market intelligence that blends technical indicators and sentiment cues
+        to surface high-confidence probability signals across equities and digital assets.
+        Track your watchlist, receive alerts when momentum shifts, and review daily
+        outlooks powered by live data.
+      </p>
+    </header>
+
+    <div class="modal-overlay" id="auth-modal">
+      <div class="modal">
+        <button class="close-modal" id="close-modal">&times;</button>
+        <div class="modal-header">
+          <h2 id="modal-title">Sign In</h2>
+          <p id="modal-subtitle">Access your investment dashboard</p>
+        </div>
+        <div class="modal-tabs">
+          <button class="modal-tab active" data-tab="login">Sign In</button>
+          <button class="modal-tab" data-tab="signup">Create Account</button>
+        </div>
+        <form class="modal-form" id="auth-form">
+          <div id="name-field" style="display: none;">
+            <input type="text" id="name-input" placeholder="Full Name" required />
+          </div>
+          <input type="email" id="email-input" placeholder="Email address" required />
+          <input type="password" id="password-input" placeholder="Password" required />
+          <div id="auth-error" class="error" style="display: none;"></div>
+          <div id="auth-success" class="success" style="display: none;"></div>
+          <button type="submit" id="submit-btn">Sign In</button>
+        </form>
+      </div>
+    </div>
+
+    <main>
+      <section id="about-section" style="grid-column: 1 / -1;">
+        <h2><span>00</span> About Market Oracle</h2>
+        <div style="line-height: 1.7; color: var(--text-secondary);">
+          <p style="margin: 0 0 16px; font-size: 15px;">
+            <strong style="color: var(--text-primary);">Market Oracle</strong> is an AI-powered investment research platform that helps you make data-driven decisions by analyzing real-time market data, technical indicators, and market sentiment. Our system automatically scans stocks and cryptocurrencies to identify high-probability investment opportunities.
+          </p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 20px;">
+            <div>
+              <strong style="color: var(--accent); display: block; margin-bottom: 8px;">📊 Technical Analysis</strong>
+              <p style="margin: 0; font-size: 13px;">RSI, MACD, moving averages, and volume analysis to detect bullish and bearish signals.</p>
+            </div>
+            <div>
+              <strong style="color: var(--accent); display: block; margin-bottom: 8px;">🤖 Auto Discovery</strong>
+              <p style="margin: 0; font-size: 13px;">Automatically finds trending assets and adds them to your watchlist for analysis.</p>
+            </div>
+            <div>
+              <strong style="color: var(--accent); display: block; margin-bottom: 8px;">⚡ Real-Time Alerts</strong>
+              <p style="margin: 0; font-size: 13px;">Get notified when high-confidence signals are detected (75%+ bullish or 25%- bullish).</p>
+            </div>
+            <div>
+              <strong style="color: var(--accent); display: block; margin-bottom: 8px;">📈 Probability Scoring</strong>
+              <p style="margin: 0; font-size: 13px;">Each asset receives a growth probability score (0-100%) with confidence levels.</p>
+            </div>
+          </div>
+          <p style="margin: 20px 0 0; padding: 16px; background: var(--panel-alt); border-radius: 8px; border-left: 3px solid var(--accent); font-size: 13px;">
+            <strong style="color: var(--text-primary);">⚠️ Important:</strong> Market Oracle provides probability-based insights and technical analysis only. This is not financial advice. Always conduct your own research and consult with a financial advisor before making investment decisions.
+          </p>
+        </div>
+      </section>
+
+      <section id="tutorial-section" style="grid-column: 1 / -1;">
+        <h2><span>?</span> How to Use Market Oracle</h2>
+        <div style="display: grid; gap: 16px;">
+          <div style="padding: 20px; background: var(--panel); border-radius: 12px; border-left: 4px solid var(--accent); box-shadow: var(--shadow-sm); transition: all 0.2s ease;">
+            <strong style="color: var(--text-primary); display: block; margin-bottom: 8px;">Step 1: Create an Account</strong>
+            <p style="margin: 0; color: var(--text-secondary); font-size: 14px;">Click "Sign In" in the top right corner, then select "Create Account" to get started. This allows you to save your watchlist and preferences.</p>
+          </div>
+          <div style="padding: 20px; background: var(--panel); border-radius: 12px; border-left: 4px solid var(--accent); box-shadow: var(--shadow-sm); transition: all 0.2s ease;">
+            <strong style="color: var(--text-primary); display: block; margin-bottom: 8px;">Step 2: Add Assets to Watchlist</strong>
+            <p style="margin: 0; color: var(--text-secondary); font-size: 14px;">Enter stock tickers (e.g., AAPL, TSLA, NVDA) or crypto symbols (e.g., BTC, ETH, SOL) and click "Add to watchlist". The system will automatically discover trending assets if your watchlist is empty.</p>
+          </div>
+          <div style="padding: 20px; background: var(--panel); border-radius: 12px; border-left: 4px solid var(--accent); box-shadow: var(--shadow-sm); transition: all 0.2s ease;">
+            <strong style="color: var(--text-primary); display: block; margin-bottom: 8px;">Step 3: Review Analysis</strong>
+            <p style="margin: 0; color: var(--text-secondary); font-size: 14px;">Each asset shows bullish/bearish probabilities, confidence scores, RSI, MACD indicators, and trend analysis. Green indicates bullish signals, red indicates bearish.</p>
+          </div>
+          <div style="padding: 20px; background: var(--panel); border-radius: 12px; border-left: 4px solid var(--accent); box-shadow: var(--shadow-sm); transition: all 0.2s ease;">
+            <strong style="color: var(--text-primary); display: block; margin-bottom: 8px;">Step 4: Monitor Alerts</strong>
+            <p style="margin: 0; color: var(--text-secondary); font-size: 14px;">High-confidence signals (≥75% bullish or ≤25% bullish) automatically appear in the "Real-Time Alerts" section. Check this regularly for new opportunities.</p>
+          </div>
+          <div style="padding: 20px; background: var(--panel); border-radius: 12px; border-left: 4px solid var(--accent); box-shadow: var(--shadow-sm); transition: all 0.2s ease;">
+            <strong style="color: var(--text-primary); display: block; margin-bottom: 8px;">Step 5: Review Top Picks</strong>
+            <p style="margin: 0; color: var(--text-secondary); font-size: 14px;">The "AutoTrader AI Top Picks" section shows the highest-probability opportunities ranked by growth potential. Each pick includes reasoning and an action zone recommendation.</p>
+          </div>
+          <div style="padding: 20px; background: var(--panel); border-radius: 12px; border-left: 4px solid var(--accent); box-shadow: var(--shadow-sm); transition: all 0.2s ease;">
+            <strong style="color: var(--text-primary); display: block; margin-bottom: 8px;">Understanding the Metrics</strong>
+            <ul style="margin: 8px 0 0; padding-left: 20px; color: var(--text-secondary); font-size: 14px;">
+              <li><strong>Bullish Probability:</strong> Chance of price rising (0-100%)</li>
+              <li><strong>Confidence:</strong> How certain the prediction is (0-100%)</li>
+              <li><strong>RSI:</strong> Relative Strength Index (30=oversold, 70=overbought)</li>
+              <li><strong>MACD:</strong> Moving Average Convergence Divergence indicator</li>
+              <li><strong>Action Zone:</strong> Entry, Exit, or Hold recommendation</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2><span>01</span> Portfolio Watchlist</h2>
+        <form id="watchlist-form" class="watchlist-form">
+          <div class="form-row">
+            <input
+              id="ticker-input"
+              type="text"
+              placeholder="Enter tickers (e.g. AAPL, NVDA, TSLA)"
+              autocomplete="off"
+              required
+            />
+            <select id="ticker-type">
+              <option value="stock">Stock</option>
+              <option value="crypto">Crypto</option>
+            </select>
+          </div>
+          <button type="submit">Add to watchlist</button>
+          <small style="color: var(--text-muted);">
+            Stock data provided by Yahoo Finance; crypto data provided by CoinGecko.
+          </small>
+        </form>
+        <div id="watchlist" class="watchlist empty-state">
+          Add tickers to begin analysis.
+        </div>
+      </section>
+
+      <section style="grid-row: span 2;">
+        <h2><span>02</span> Real-Time Alerts</h2>
+        <div id="alert-feed" class="alert-feed empty-state">
+          No alerts yet. High-confidence signals (>= 75% bullish or <= 25% bullish) will appear here.
+        </div>
+      </section>
+
+      <aside>
+        <h2><span>03</span> Daily Market Outlook</h2>
+        <div id="summary" class="summary-grid">
+          <div class="loading">Waiting for watchlist analysis...</div>
+        </div>
+      </aside>
+
+      <section>
+        <h2><span>04</span> AutoTrader AI Top Picks</h2>
+        <p class="section-desc">
+          AutoTrader AI continuously scans market performance, sentiment, and momentum to surface
+          self-selected opportunities. Probabilities are generated from live indicators and refreshed
+          whenever new data arrives.
+        </p>
+        <div id="autotrader-report" class="autotrader-report">
+          <div class="loading">Scanning for high-probability opportunities...</div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Market Oracle synthesizes prices, technical signals (RSI, MACD, moving averages), and sentiment
+      momentum to deliver probability-based insights. Outputs reference confidence bands and never
+      constitute financial advice.
+    </footer>
+
+    <script>
+      const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
+      const YAHOO_FINANCE_BASE = "https://query1.finance.yahoo.com/v8/finance/chart";
+      const ALERT_CONFIDENCE_HIGH = 75;
+      const ALERT_CONFIDENCE_LOW = 25;
+
+      const state = {
+        watchlist: [],
+        results: new Map(),
+        alerts: [],
+        lastSummary: null,
+        topPicks: [],
+        probabilityHistory: new Map(),
+        currentUser: null,
+      };
+
+      const watchlistContainer = document.getElementById("watchlist");
+      const alertFeed = document.getElementById("alert-feed");
+      const summaryContainer = document.getElementById("summary");
+      const autotraderReport = document.getElementById("autotrader-report");
+      const watchlistForm = document.getElementById("watchlist-form");
+      const authModal = document.getElementById("auth-modal");
+      const authBtn = document.getElementById("auth-btn");
+      const userInfo = document.getElementById("user-info");
+      const userName = document.getElementById("user-name");
+      const userAvatar = document.getElementById("user-avatar");
+      const logoutBtn = document.getElementById("logout-btn");
+      const closeModal = document.getElementById("close-modal");
+      const authForm = document.getElementById("auth-form");
+      const modalTabs = document.querySelectorAll(".modal-tab");
+      const modalTitle = document.getElementById("modal-title");
+      const modalSubtitle = document.getElementById("modal-subtitle");
+      const submitBtn = document.getElementById("submit-btn");
+      const nameField = document.getElementById("name-field");
+      const nameInput = document.getElementById("name-input");
+      const emailInput = document.getElementById("email-input");
+      const passwordInput = document.getElementById("password-input");
+      const authError = document.getElementById("auth-error");
+      const authSuccess = document.getElementById("auth-success");
+
+      let currentTab = "login";
+
+      function loadUser() {
+        const userData = localStorage.getItem("marketOracle_user");
+        if (userData) {
+          state.currentUser = JSON.parse(userData);
+          updateUserUI();
+        }
+      }
+
+      function saveUser(user) {
+        localStorage.setItem("marketOracle_user", JSON.stringify(user));
+        state.currentUser = user;
+        updateUserUI();
+      }
+
+      function updateUserUI() {
+        if (state.currentUser) {
+          authBtn.style.display = "none";
+          userInfo.style.display = "flex";
+          userName.textContent = state.currentUser.name || state.currentUser.email.split("@")[0];
+          userAvatar.textContent = (state.currentUser.name || state.currentUser.email)[0].toUpperCase();
+        } else {
+          authBtn.style.display = "block";
+          userInfo.style.display = "none";
+        }
+      }
+
+      function showError(message) {
+        authError.textContent = message;
+        authError.style.display = "block";
+        authSuccess.style.display = "none";
+      }
+
+      function showSuccess(message) {
+        authSuccess.textContent = message;
+        authSuccess.style.display = "block";
+        authError.style.display = "none";
+      }
+
+      function switchTab(tab) {
+        currentTab = tab;
+        modalTabs.forEach((t) => {
+          if (t.dataset.tab === tab) {
+            t.classList.add("active");
+          } else {
+            t.classList.remove("active");
+          }
+        });
+
+        if (tab === "signup") {
+          modalTitle.textContent = "Create Account";
+          modalSubtitle.textContent = "Start tracking your investments";
+          submitBtn.textContent = "Create Account";
+          nameField.style.display = "block";
+          nameInput.required = true;
+        } else {
+          modalTitle.textContent = "Sign In";
+          modalSubtitle.textContent = "Access your investment dashboard";
+          submitBtn.textContent = "Sign In";
+          nameField.style.display = "none";
+          nameInput.required = false;
+        }
+        authError.style.display = "none";
+        authSuccess.style.display = "none";
+      }
+
+      function openModal() {
+        authModal.classList.add("active");
+        switchTab("login");
+        emailInput.value = "";
+        passwordInput.value = "";
+        nameInput.value = "";
+      }
+
+      function closeModalFunc() {
+        authModal.classList.remove("active");
+        authError.style.display = "none";
+        authSuccess.style.display = "none";
+      }
+
+      function login(email, password) {
+        const users = JSON.parse(localStorage.getItem("marketOracle_users") || "[]");
+        const user = users.find((u) => u.email === email && u.password === password);
+        if (user) {
+          saveUser({ email: user.email, name: user.name });
+          showSuccess("Successfully signed in!");
+          setTimeout(() => {
+            closeModalFunc();
+          }, 1000);
+          return true;
+        }
+        showError("Invalid email or password");
+        return false;
+      }
+
+      function signup(name, email, password) {
+        if (password.length < 6) {
+          showError("Password must be at least 6 characters");
+          return false;
+        }
+
+        const users = JSON.parse(localStorage.getItem("marketOracle_users") || "[]");
+        if (users.find((u) => u.email === email)) {
+          showError("An account with this email already exists");
+          return false;
+        }
+
+        const newUser = { name, email, password, createdAt: new Date().toISOString() };
+        users.push(newUser);
+        localStorage.setItem("marketOracle_users", JSON.stringify(users));
+        saveUser({ email, name });
+        showSuccess("Account created successfully!");
+        setTimeout(() => {
+          closeModalFunc();
+        }, 1000);
+        return true;
+      }
+
+      authBtn.addEventListener("click", openModal);
+      closeModal.addEventListener("click", closeModalFunc);
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("marketOracle_user");
+        state.currentUser = null;
+        updateUserUI();
+      });
+
+      modalTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          switchTab(tab.dataset.tab);
+        });
+      });
+
+      authForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+        const name = nameInput.value.trim();
+
+        if (currentTab === "signup") {
+          if (!name) {
+            showError("Please enter your name");
+            return;
+          }
+          signup(name, email, password);
+        } else {
+          login(email, password);
+        }
+      });
+
+      authModal.addEventListener("click", (e) => {
+        if (e.target === authModal) {
+          closeModalFunc();
+        }
+      });
+
+      loadUser();
+
+      function normalizeTicker(symbol) {
+        return symbol.trim().toUpperCase();
+      }
+
+      function renderWatchlist() {
+        if (!state.watchlist.length) {
+          watchlistContainer.classList.add("empty-state");
+          watchlistContainer.textContent = "Auto-discovering trending assets...";
+          return;
+        }
+
+        watchlistContainer.classList.remove("empty-state");
+
+        watchlistContainer.innerHTML = "";
+        const fragment = document.createDocumentFragment();
+
+        state.watchlist.forEach((asset) => {
+          const data = state.results.get(asset.id);
+          const card = document.createElement("article");
+          card.className = "asset-card";
+
+          const removeBtn = document.createElement("button");
+          removeBtn.className = "remove-btn";
+          removeBtn.textContent = "×";
+          removeBtn.setAttribute("aria-label", "Remove from watchlist");
+          removeBtn.onclick = (e) => {
+            e.stopPropagation();
+            removeFromWatchlist(asset.id);
+          };
+          card.appendChild(removeBtn);
+
+          const badge = document.createElement("div");
+          badge.className = "badge";
+          badge.textContent = asset.type === "crypto" ? "CR" : "$";
+          card.appendChild(badge);
+
+          const info = document.createElement("div");
+          const title = document.createElement("h3");
+          title.textContent = asset.label;
+          info.appendChild(title);
+          const subtitle = document.createElement("p");
+          if (!data) {
+            subtitle.textContent = "Fetching live data...";
+          } else if (data.error) {
+            subtitle.textContent = data.error;
+            subtitle.style.color = "var(--danger)";
+          } else {
+            const detailParts = [];
+
+            if (data.meta.price !== undefined && !Number.isNaN(data.meta.price)) {
+              detailParts.push(
+                "Price: " + formatCurrency(data.meta.price, data.meta.currency)
+              );
+            }
+
+            if (data.meta.change24h !== undefined && !Number.isNaN(data.meta.change24h)) {
+              const changeColor = data.meta.change24h >= 0 ? "var(--success)" : "var(--danger)";
+              detailParts.push(
+                '24h: <strong style="color:' +
+                  changeColor +
+                  '\">' +
+                  formatPercent(data.meta.change24h) +
+                  "</strong>"
+              );
+            }
+
+            if (data.meta.volume !== undefined && !Number.isNaN(data.meta.volume)) {
+              detailParts.push("Volume: " + formatCompactNumber(data.meta.volume));
+            }
+
+            subtitle.innerHTML = detailParts.length
+              ? detailParts.join(" | ")
+              : "No market metadata available.";
+          }
+          info.appendChild(subtitle);
+          card.appendChild(info);
+
+          const signals = document.createElement("div");
+          signals.className = "signals";
+
+          if (!data) {
+            signals.textContent = "Calculating probability...";
+          } else if (data.error) {
+            signals.innerHTML = `<span style="color: var(--danger); font-size: 12px;">${data.error}</span>`;
+            if (data.error.includes("API key") || data.error.includes("REPLACE")) {
+              signals.innerHTML += '<br><span style="color: var(--text-muted); font-size: 11px;">Tip: Add your Alpha Vantage API key for stock data</span>';
+            }
+          } else {
+            signals.innerHTML = [
+              `<strong>Bullish:</strong> ${formatPercent(data.analysis.bullishProbability)}`,
+              `<strong>Bearish:</strong> ${formatPercent(data.analysis.bearishProbability)}`,
+              `<span style="color: var(--text-muted);">Confidence: ${Math.round(data.analysis.confidence)}%</span>`,
+              `<span style="color: var(--text-muted);">RSI: ${data.indicators.rsi.toFixed(1)} | MACD: ${data.indicators.macd.toFixed(2)}</span>`,
+            ].join("<br>");
+
+            const bar = document.createElement("div");
+            bar.className = "confidence-bar";
+            const barFill = document.createElement("span");
+            barFill.style.transform = `scaleX(${Math.min(1, data.analysis.confidence / 100)})`;
+            bar.appendChild(barFill);
+            signals.appendChild(bar);
+
+            const rationale = document.createElement("p");
+            rationale.style.margin = "6px 0 0";
+            rationale.style.fontSize = "12px";
+            rationale.style.color = "var(--text-secondary)";
+            rationale.textContent = data.analysis.rationale;
+            signals.appendChild(rationale);
+          }
+
+          card.appendChild(signals);
+          fragment.appendChild(card);
+        });
+
+        watchlistContainer.innerHTML = "";
+        watchlistContainer.appendChild(fragment);
+      }
+
+      function renderAlerts() {
+        if (!state.alerts.length) {
+          alertFeed.classList.add("empty-state");
+          alertFeed.textContent =
+            "No alerts yet. High-confidence signals (>= 75% bullish or <= 25% bullish) will appear here.";
+          return;
+        }
+
+        alertFeed.classList.remove("empty-state");
+        alertFeed.innerHTML = "";
+
+        state.alerts.slice(-10).reverse().forEach((alert) => {
+          const node = document.createElement("div");
+          node.className = "alert";
+
+          const header = document.createElement("div");
+          header.className = "alert-header";
+
+          const emoji = document.createElement("span");
+          emoji.className = "emoji";
+          let label = "INFO";
+          if (alert.type === "bullish") label = "UP";
+          else if (alert.type === "bearish") label = "WARN";
+          else if (alert.type === "update") label = "SHIFT";
+          emoji.textContent = label;
+          header.appendChild(emoji);
+
+          const title = document.createElement("span");
+          title.innerHTML = `<strong>[${alert.symbol}] ${alert.title}</strong>`;
+          header.appendChild(title);
+          node.appendChild(header);
+
+          const body = document.createElement("p");
+          body.innerHTML = alert.message;
+          node.appendChild(body);
+
+          const meta = document.createElement("div");
+          meta.className = "alert-meta";
+          const metaParts = [
+            `Confidence: <strong>${Math.round(alert.confidence)}%</strong>`,
+          ];
+
+          if (alert.meta && alert.meta.probabilityDelta !== undefined) {
+            metaParts.push(
+              `Shift: ${alert.meta.probabilityDelta > 0 ? "+" : ""}${alert.meta.probabilityDelta}`
+            );
+          }
+
+          if (alert.indicators) {
+            metaParts.push(`RSI: ${alert.indicators.rsi.toFixed(1)}`);
+            metaParts.push(`MACD: ${alert.indicators.macd.toFixed(2)}`);
+          }
+
+          if (alert.meta && alert.meta.volumeChange !== undefined) {
+            metaParts.push(
+              `Volume: ${formatPercent(alert.meta.volumeChange)} vs 24h avg`
+            );
+          }
+
+          meta.innerHTML = metaParts.filter(Boolean).join(" | ");
+          node.appendChild(meta);
+
+          alertFeed.appendChild(node);
+        });
+      }
+
+      function renderSummary() {
+        const entries = Array.from(state.results.values()).filter(
+          (entry) => entry && !entry.error
+        );
+
+        if (!entries.length) {
+          if (state.watchlist.length === 0) {
+            summaryContainer.innerHTML =
+              '<div class="loading">Auto-discovering assets and analyzing market data...</div>';
+          } else {
+            summaryContainer.innerHTML =
+              '<div class="loading">Analyzing watchlist assets...</div>';
+          }
+          return;
+        }
+
+        const bullish = [...entries]
+          .sort((a, b) => b.analysis.bullishProbability - a.analysis.bullishProbability)
+          .slice(0, 3);
+        const bearish = [...entries]
+          .sort((a, b) => a.analysis.bullishProbability - b.analysis.bullishProbability)
+          .slice(0, 3);
+
+        summaryContainer.innerHTML = "";
+
+        const summaryCards = [
+          {
+            title: "Top 3 Bullish",
+            emoji: "[UP]",
+            list: bullish.map((item, idx) => `${idx + 1}. ${item.meta.symbol} (${formatPercent(item.analysis.bullishProbability)})`),
+          },
+          {
+            title: "Top 3 Bearish",
+            emoji: "[DOWN]",
+            list: bearish.map((item, idx) => `${idx + 1}. ${item.meta.symbol} (${formatPercent(item.analysis.bullishProbability)})`),
+          },
+          {
+            title: "Market Sentiment",
+            emoji: "[AI]",
+            list: generateSentimentHeadline(entries),
+          },
+        ];
+
+        summaryCards.forEach((card) => {
+          const node = document.createElement("div");
+          node.className = "summary-card";
+
+          const heading = document.createElement("h3");
+          heading.textContent = `${card.emoji} ${card.title}`;
+          node.appendChild(heading);
+
+          if (Array.isArray(card.list)) {
+            card.list.forEach((item) => {
+              const line = document.createElement("p");
+              line.innerHTML = item;
+              node.appendChild(line);
+            });
+          } else {
+            const line = document.createElement("p");
+            line.innerHTML = card.list;
+            node.appendChild(line);
+          }
+
+          summaryContainer.appendChild(node);
+        });
+      }
+
+      function renderTopPicks() {
+        if (!state.topPicks.length) {
+          autotraderReport.classList.add("empty-state");
+          if (state.watchlist.length === 0) {
+            autotraderReport.innerHTML =
+              '<div class="loading">Auto-discovering trending assets and analyzing opportunities...</div>';
+          } else {
+            autotraderReport.innerHTML =
+              '<div class="loading">AutoTrader AI is analyzing assets. High-probability opportunities will appear here.</div>';
+          }
+          return;
+        }
+
+        autotraderReport.classList.remove("empty-state");
+        autotraderReport.innerHTML = "";
+
+        state.topPicks.forEach((pick) => {
+          const card = document.createElement("article");
+          card.className = "top-pick-card";
+
+          const header = document.createElement("div");
+          header.className = "top-pick-header";
+          header.innerHTML = `<strong>${pick.meta.symbol}</strong><span>${pick.meta.name}</span>`;
+          card.appendChild(header);
+
+          const metaRow = document.createElement("div");
+          metaRow.className = "top-pick-meta";
+          const metaBits = [
+            `Sector: ${pick.meta.sector || "N/A"}`,
+            `Type: ${pick.meta.type.toUpperCase()}`,
+            `7d: ${formatPercent(pick.meta.trend7d)}`,
+            `30d: ${formatPercent(pick.meta.trend30d)}`,
+            pick.meta.volume ? `Volume: ${formatCompactNumber(pick.meta.volume)}` : null,
+            pick.meta.volatility !== undefined
+              ? `Volatility: ${formatPercent(pick.meta.volatility)}`
+              : null,
+          ]
+            .filter(Boolean)
+            .join(" | ");
+          metaRow.textContent = metaBits;
+          card.appendChild(metaRow);
+
+          const progress = document.createElement("div");
+          progress.className = "progress-bars";
+          progress.innerHTML = [
+            buildProgressRow("Growth Probability", pick.growthProbability),
+            buildProgressRow("Confidence", pick.confidence),
+          ].join("");
+          card.appendChild(progress);
+
+          const reasoning = document.createElement("p");
+          reasoning.className = "reasoning";
+          reasoning.textContent = pick.reasoning;
+          card.appendChild(reasoning);
+
+          const action = document.createElement("span");
+          action.className = "action-zone";
+          action.textContent = pick.actionZone;
+          card.appendChild(action);
+
+          autotraderReport.appendChild(card);
+        });
+      }
+
+      function buildProgressRow(label, value) {
+        const safeValue = Math.max(0, Math.min(100, Math.round(value)));
+        return (
+          '<div class="progress-row">' +
+          `<span>${label}</span>` +
+          '<div class="progress-track">' +
+          `<div class="progress-fill" style="width:${safeValue}%"></div>` +
+          "</div>" +
+          `<div>${safeValue}%</div>` +
+          "</div>"
+        );
+      }
+
+      function determineActionZone(probability, confidence) {
+        if (probability >= 80 && confidence >= 60) {
+          return "Potential Entry Zone";
+        }
+        if (probability <= 35 && confidence >= 60) {
+          return "Potential Exit Zone";
+        }
+        return "Hold / Monitor";
+      }
+
+      function buildReasoningSummary(entry) {
+        const parts = [];
+
+        if (entry.meta.trend7d !== undefined) {
+          parts.push(`7d move ${formatPercent(entry.meta.trend7d)}`);
+        }
+        if (entry.meta.trend30d !== undefined) {
+          parts.push(`30d move ${formatPercent(entry.meta.trend30d)}`);
+        }
+        if (entry.analysis.volumeChange !== undefined) {
+          parts.push(
+            entry.analysis.volumeChange >= 0
+              ? `Volume rising (${formatPercent(entry.analysis.volumeChange)})`
+              : `Volume cooling (${formatPercent(entry.analysis.volumeChange)})`
+          );
+        }
+        if (entry.analysis.rationale) {
+          parts.push(entry.analysis.rationale);
+        }
+
+        return parts.join(" | ") || "Awaiting additional data for qualitative summary.";
+      }
+
+      function refreshTopPicks() {
+        const candidates = state.watchlist
+          .map((asset) => {
+            const data = state.results.get(asset.id);
+            if (!data || data.error) return null;
+            if (!data.analysis || !data.indicators) return null;
+            return {
+              asset,
+              meta: {
+                ...data.meta,
+                type: asset.type,
+                name: asset.label,
+                sector: data.meta.sector || (asset.type === "stock" ? "Equities" : "Digital Assets"),
+                trend7d: data.meta.trend7d,
+                trend30d: data.meta.trend30d,
+                volatility: data.meta.volatility,
+              },
+              analysis: data.analysis,
+              indicators: data.indicators,
+            };
+          })
+          .filter(Boolean)
+          .filter((entry) => {
+            const volume = entry.meta.volume || 0;
+            return volume >= 100_000;
+          });
+
+        const ranked = candidates
+          .map((entry) => {
+            const growthProbability = Math.round(entry.analysis.bullishProbability * 100);
+            const confidence = Math.round(entry.analysis.confidence);
+            return {
+              ...entry,
+              growthProbability,
+              confidence,
+              reasoning: buildReasoningSummary(entry),
+              actionZone: determineActionZone(growthProbability, confidence),
+            };
+          })
+          .filter((entry) => entry.growthProbability >= 40)
+          .sort((a, b) => b.growthProbability - a.growthProbability)
+          .slice(0, 5);
+
+        ranked.forEach((pick) => {
+          const previous = state.probabilityHistory.get(pick.meta.symbol);
+          if (previous !== undefined) {
+            const delta = pick.growthProbability - previous;
+            if (Math.abs(delta) >= 15) {
+              state.alerts.push({
+                type: "update",
+                title: "Probability shifted",
+                symbol: pick.meta.symbol,
+                confidence: pick.growthProbability,
+                indicators: pick.indicators,
+                meta: {
+                  timestamp: Date.now().toString(),
+                  probabilityDelta: delta,
+                  sector: pick.meta.sector,
+                },
+                message: `Growth probability moved ${delta > 0 ? "up" : "down"} ${Math.abs(delta)} points. ${pick.reasoning}`,
+              });
+            }
+          }
+          state.probabilityHistory.set(pick.meta.symbol, pick.growthProbability);
+        });
+
+        state.topPicks = ranked;
+        renderTopPicks();
+        renderAlerts();
+      }
+
+      function generateSentimentHeadline(entries) {
+        const avgBullish =
+          entries.reduce((acc, item) => acc + item.analysis.bullishProbability, 0) /
+          entries.length;
+        const avgConfidence =
+          entries.reduce((acc, item) => acc + item.analysis.confidence, 0) /
+          entries.length;
+
+        let sentiment;
+        if (avgBullish > 62) {
+          sentiment = "Bullish momentum building";
+        } else if (avgBullish < 38) {
+          sentiment = "Bearish pressure dominant";
+        } else {
+          sentiment = "Neutral with sideways bias";
+        }
+
+        return `${sentiment}. Avg bullish probability: ${formatPercent(avgBullish)} | Avg confidence: ${Math.round(avgConfidence)}%.`;
+      }
+
+      function formatCurrency(value, currency = "USD") {
+        if (value === undefined || isNaN(value)) return "N/A";
+        return new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency,
+          maximumFractionDigits: value >= 100 ? 2 : 4,
+        }).format(value);
+      }
+
+      function formatPercent(value) {
+        if (value === undefined || isNaN(value)) return "N/A";
+        const percent = Math.abs(value) <= 1 ? value * 100 : value;
+        return `${percent.toFixed(1)}%`;
+      }
+
+      function formatCompactNumber(value) {
+        if (value === undefined || isNaN(value)) return "N/A";
+        return new Intl.NumberFormat("en-US", {
+          notation: "compact",
+          maximumFractionDigits: 2,
+        }).format(value);
+      }
+
+      function removeFromWatchlist(assetId) {
+        state.watchlist = state.watchlist.filter((item) => item.id !== assetId);
+        state.results.delete(assetId);
+        state.probabilityHistory.delete(assetId.split("::")[1]);
+        renderWatchlist();
+        refreshTopPicks();
+        renderSummary();
+      }
+
+      async function addToWatchlist(symbols, type) {
+        const list = symbols
+          .split(",")
+          .map(normalizeTicker)
+          .filter(Boolean);
+
+        list.forEach((symbol) => {
+          const id = `${type}::${symbol}`;
+          if (!state.watchlist.some((item) => item.id === id)) {
+            state.watchlist.push({
+              id,
+              symbol,
+              label: type === "crypto" ? `${symbol} / USD` : `${symbol}`,
+              type,
+            });
+          }
+        });
+
+        renderWatchlist();
+        await refreshAnalysis();
+      }
+
+      async function refreshAnalysis() {
+        if (!state.watchlist.length) return;
+
+        const updates = await Promise.allSettled(
+          state.watchlist.map(async (asset) => {
+            try {
+              const data =
+                asset.type === "crypto"
+                  ? await fetchCryptoInsights(asset.symbol)
+                  : await fetchStockInsights(asset.symbol);
+
+              state.results.set(asset.id, data);
+              maybeCreateAlert(data);
+            } catch (error) {
+              const errorMessage = error?.message || "Unable to retrieve data. Check API limits or symbol formatting.";
+              state.results.set(asset.id, {
+                error: errorMessage,
+                meta: {
+                  symbol: asset.symbol,
+                  error: true,
+                },
+              });
+            }
+          })
+        );
+
+        renderWatchlist();
+        renderSummary();
+        refreshTopPicks();
+        renderAlerts();
+      }
+
+      function maybeCreateAlert(data) {
+        if (!data || data.error) return;
+
+        const existing = state.alerts.find(
+          (alert) => alert.meta.timestamp === data.meta.timestamp && alert.symbol === data.meta.symbol
+        );
+        if (existing) return;
+
+        if (data.analysis.bullishProbability * 100 >= ALERT_CONFIDENCE_HIGH) {
+          state.alerts.push({
+            type: "bullish",
+            title: "Bullish signal detected",
+            symbol: data.meta.symbol,
+            confidence: data.analysis.bullishProbability * 100,
+            indicators: data.indicators,
+            meta: data.meta,
+            message: data.analysis.summary,
+          });
+        } else if (data.analysis.bullishProbability * 100 <= ALERT_CONFIDENCE_LOW) {
+          state.alerts.push({
+            type: "bearish",
+            title: "Bearish signal detected",
+            symbol: data.meta.symbol,
+            confidence: data.analysis.bullishProbability * 100,
+            indicators: data.indicators,
+            meta: data.meta,
+            message: data.analysis.summary,
+          });
+        }
+      }
+
+      async function fetchStockInsights(symbol) {
+        try {
+          const period1 = Math.floor((Date.now() - 90 * 24 * 60 * 60 * 1000) / 1000);
+          const period2 = Math.floor(Date.now() / 1000);
+          const url = `${YAHOO_FINANCE_BASE}/${symbol}?period1=${period1}&period2=${period2}&interval=1d`;
+
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch data for ${symbol}. Status: ${response.status}`);
+          }
+
+          const payload = await response.json();
+          
+          if (!payload.chart || !payload.chart.result || payload.chart.result.length === 0) {
+            throw new Error(`No data available for symbol ${symbol}. Please check the ticker symbol.`);
+          }
+
+          const result = payload.chart.result[0];
+          const timestamps = result.timestamp || [];
+          const closes = result.indicators?.quote?.[0]?.close || [];
+          const volumes = result.indicators?.quote?.[0]?.volume || [];
+          const meta = result.meta || {};
+
+          if (closes.length === 0) {
+            throw new Error(`No price data available for ${symbol}`);
+          }
+
+          const series = timestamps
+            .map((timestamp, index) => ({
+              date: new Date(timestamp * 1000).toISOString().split("T")[0],
+              close: closes[index],
+              volume: volumes[index] || 0,
+            }))
+            .filter((item) => item.close && !isNaN(item.close) && item.close > 0)
+            .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+          if (series.length < 7) {
+            throw new Error(`Insufficient historical data for ${symbol}. Need at least 7 days of data.`);
+          }
+
+          const prices = series.map((point) => point.close);
+          const volumeArray = series.map((point) => point.volume);
+
+          const trend7d = calculateTrend(prices, 7);
+          const trend30d = calculateTrend(prices, 30);
+          const volatility = calculateVolatility(prices, 30);
+
+          const indicators = computeIndicators(prices);
+          const analysis = deriveSignal(indicators, volumeArray);
+
+          const latest = series.at(-1);
+          const prior = series.at(-2);
+          const currentPrice = meta.regularMarketPrice || latest.close;
+          const previousClose = meta.previousClose || prior?.close;
+
+          return {
+            meta: {
+              symbol,
+              price: currentPrice,
+              currency: "USD",
+              change24h: previousClose ? (currentPrice - previousClose) / previousClose : (prior ? (latest.close - prior.close) / prior.close : undefined),
+              volume: latest.volume || meta.regularMarketVolume || 0,
+              volumeChange: calculateVolumeChange(volumeArray),
+              timestamp: latest.date,
+              trend7d,
+              trend30d,
+              volatility,
+            },
+            indicators,
+            analysis,
+          };
+        } catch (error) {
+          console.error(`Error fetching stock data for ${symbol}:`, error);
+          throw new Error(error.message || `Unable to fetch data for ${symbol}. Please verify the ticker symbol is correct.`);
+        }
+      }
+
+      async function fetchCryptoInsights(symbol) {
+        const id = await resolveCoinGeckoId(symbol);
+        const marketUrl = `${COINGECKO_BASE}/coins/${id}`;
+        const params = new URLSearchParams({
+          localization: "false",
+          tickers: "false",
+          community_data: "false",
+          developer_data: "false",
+          sparkline: "false",
+        });
+
+        const [marketResp, chartResp] = await Promise.all([
+          fetch(`${marketUrl}?${params}`),
+          fetch(`${COINGECKO_BASE}/coins/${id}/market_chart?vs_currency=usd&days=30&interval=daily`),
+        ]);
+
+        if (!marketResp.ok || !chartResp.ok) throw new Error("CoinGecko request failed.");
+
+        const marketData = await marketResp.json();
+        const chartData = await chartResp.json();
+
+        if (!chartData?.prices?.length) {
+          throw new Error("Insufficient historical data.");
+        }
+
+        const prices = chartData.prices.map(([, price]) => price);
+        const volumes = chartData.total_volumes.map(([, vol]) => vol);
+
+        const trend7d = calculateTrend(prices, 7);
+        const trend30d = calculateTrend(prices, 30);
+        const volatility = calculateVolatility(prices, 30);
+
+        const indicators = computeIndicators(prices);
+        const analysis = deriveSignal(indicators, volumes);
+
+        return {
+          meta: {
+            symbol,
+            price: marketData.market_data.current_price.usd,
+            currency: "USD",
+            change24h: marketData.market_data.price_change_percentage_24h / 100,
+            volume: marketData.market_data.total_volume.usd,
+            volumeChange: calculateVolumeChange(volumes),
+            timestamp: new Date().toISOString(),
+            marketCap: marketData.market_data.market_cap.usd,
+            volatility,
+            trend7d,
+            trend30d,
+            sector: marketData.categories?.[0],
+          },
+          indicators,
+          analysis,
+        };
+      }
+
+      async function resolveCoinGeckoId(symbol) {
+        const cached = window.sessionStorage.getItem(`cg::${symbol}`);
+        if (cached) return cached;
+
+        const response = await fetch(`${COINGECKO_BASE}/coins/list`);
+        if (!response.ok) throw new Error("Unable to resolve CoinGecko asset ID.");
+        const list = await response.json();
+
+        const match =
+          list.find((item) => item.symbol.toLowerCase() === symbol.toLowerCase()) ||
+          list.find((item) => item.id.toLowerCase() === symbol.toLowerCase());
+
+        if (!match) {
+          throw new Error("Coin symbol not found on CoinGecko.");
+        }
+
+        window.sessionStorage.setItem(`cg::${symbol}`, match.id);
+        return match.id;
+      }
+
+      async function discoverTrendingCrypto() {
+        try {
+          const response = await fetch(`${COINGECKO_BASE}/search/trending`);
+          if (!response.ok) return [];
+          const data = await response.json();
+          
+          return (data.coins || []).slice(0, 5).map((coin) => ({
+            symbol: coin.item.symbol.toUpperCase(),
+            type: "crypto",
+          }));
+        } catch (error) {
+          console.warn("Failed to fetch trending crypto:", error);
+          return [];
+        }
+      }
+
+      async function discoverPopularCrypto() {
+        try {
+          const response = await fetch(
+            `${COINGECKO_BASE}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false`
+          );
+          if (!response.ok) return [];
+          const data = await response.json();
+          
+          return data.slice(0, 5).map((coin) => ({
+            symbol: coin.symbol.toUpperCase(),
+            type: "crypto",
+          }));
+        } catch (error) {
+          console.warn("Failed to fetch popular crypto:", error);
+          return [];
+        }
+      }
+
+      function getPopularStocks() {
+        return [
+          "AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA", "NFLX", "AMD", "INTC"
+        ].map((symbol) => ({
+          symbol,
+          type: "stock",
+        }));
+      }
+
+      async function autoDiscoverAssets() {
+        if (state.watchlist.length > 0) {
+          return;
+        }
+
+        const discovered = [];
+        
+        const trendingCrypto = await discoverTrendingCrypto();
+        discovered.push(...trendingCrypto);
+
+        const popularCrypto = await discoverPopularCrypto();
+        const uniqueCrypto = popularCrypto.filter(
+          (c) => !discovered.some((d) => d.symbol === c.symbol && d.type === c.type)
+        );
+        discovered.push(...uniqueCrypto.slice(0, 3));
+
+        const popularStocks = getPopularStocks();
+        discovered.push(...popularStocks.slice(0, 5));
+
+        for (const asset of discovered) {
+          const id = `${asset.type}::${asset.symbol}`;
+          if (!state.watchlist.some((item) => item.id === id)) {
+            state.watchlist.push({
+              id,
+              symbol: asset.symbol,
+              label: asset.type === "crypto" ? `${asset.symbol} / USD` : asset.symbol,
+              type: asset.type,
+            });
+          }
+        }
+
+        if (state.watchlist.length > 0) {
+          renderWatchlist();
+          await refreshAnalysis();
+        }
+      }
+
+      function computeIndicators(prices) {
+        const rsiPeriod = 14;
+        const macdShort = 12;
+        const macdLong = 26;
+        const macdSignal = 9;
+        const shortMA = 20;
+        const longMA = 50;
+        const ema = (period, values) => {
+          const k = 2 / (period + 1);
+          let emaPrev = values.slice(0, period).reduce((a, b) => a + b, 0) / period;
+          for (let i = period; i < values.length; i++) {
+            emaPrev = values[i] * k + emaPrev * (1 - k);
+          }
+          return emaPrev;
+        };
+
+        const rsi = calculateRSI(prices, rsiPeriod);
+        const macdValue = calculateMACD(prices, macdShort, macdLong);
+        const macdSignalValue = calculateMACDSignal(
+          prices,
+          macdShort,
+          macdLong,
+          macdSignal
+        );
+        const macdHistogram = macdValue - macdSignalValue;
+        const shortMAValue = ema(shortMA, prices);
+        const longMAValue = ema(longMA, prices);
+        const latestPrice = prices.at(-1);
+        const prevPrice = prices.at(-2);
+
+        return {
+          rsi,
+          macd: macdValue,
+          macdSignal: macdSignalValue,
+          macdHistogram,
+          shortMA: shortMAValue,
+          longMA: longMAValue,
+          priceTrend: latestPrice > prevPrice ? 1 : -1,
+        };
+      }
+
+      function calculateRSI(prices, period = 14) {
+        if (prices.length < period + 1) return 50;
+        let gains = 0;
+        let losses = 0;
+
+        for (let i = prices.length - period; i < prices.length; i++) {
+          const delta = prices[i] - prices[i - 1];
+          if (delta >= 0) gains += delta;
+          else losses += Math.abs(delta);
+        }
+
+        const avgGain = gains / period;
+        const avgLoss = losses / period || 1e-9;
+        const rs = avgGain / avgLoss;
+        const rsi = 100 - 100 / (1 + rs);
+        return Math.max(0, Math.min(100, rsi));
+      }
+
+      function calculateEMA(values, period) {
+        const k = 2 / (period + 1);
+        let ema = values.slice(0, period).reduce((a, b) => a + b, 0) / period;
+        for (let i = period; i < values.length; i++) {
+          ema = values[i] * k + ema * (1 - k);
+        }
+        return ema;
+      }
+
+      function calculateMACD(prices, shortPeriod, longPeriod) {
+        if (prices.length < longPeriod) return 0;
+        const emaShort = calculateEMA(prices, shortPeriod);
+        const emaLong = calculateEMA(prices, longPeriod);
+        return emaShort - emaLong;
+      }
+
+      function calculateMACDSignal(prices, shortPeriod, longPeriod, signalPeriod) {
+        const macdValues = [];
+        for (let i = longPeriod; i <= prices.length; i++) {
+          const slice = prices.slice(0, i);
+          macdValues.push(calculateMACD(slice, shortPeriod, longPeriod));
+        }
+
+        if (macdValues.length < signalPeriod) {
+          return macdValues.at(-1) || 0;
+        }
+
+        return calculateEMA(macdValues, signalPeriod);
+      }
+
+      function calculateVolumeChange(volumes) {
+        if (volumes.length < 2) return 0;
+        const latest = volumes.at(-1);
+        const avg = volumes.slice(-10).reduce((a, b) => a + b, 0) / Math.min(10, volumes.length);
+        return avg ? (latest - avg) / avg : 0;
+      }
+
+      function calculateTrend(prices, days) {
+        if (!Array.isArray(prices) || prices.length <= days) return undefined;
+        const latest = prices.at(-1);
+        const comparison = prices[prices.length - 1 - days];
+        if (!comparison || comparison === 0) return undefined;
+        return (latest - comparison) / comparison;
+      }
+
+      function calculateVolatility(prices, period = 30) {
+        if (!Array.isArray(prices) || prices.length <= period) return undefined;
+        const start = prices.length - period;
+        const returns = [];
+        for (let i = start + 1; i < prices.length; i++) {
+          const previous = prices[i - 1];
+          const current = prices[i];
+          if (!previous) continue;
+          returns.push((current - previous) / previous);
+        }
+        if (!returns.length) return undefined;
+        const mean =
+          returns.reduce((accumulator, value) => accumulator + value, 0) / returns.length;
+        const variance =
+          returns.reduce((accumulator, value) => accumulator + Math.pow(value - mean, 2), 0) /
+          returns.length;
+        return Math.sqrt(variance);
+      }
+
+      function deriveSignal(indicators, volumes) {
+        const { rsi, macd, macdSignal, macdHistogram, shortMA, longMA, priceTrend } =
+          indicators;
+        const volumeChange = calculateVolumeChange(volumes);
+
+        let bullishScore = 0;
+        let bearishScore = 0;
+
+        if (rsi < 30) bullishScore += 2;
+        else if (rsi >= 30 && rsi <= 60) bullishScore += 1;
+        else if (rsi > 70) bearishScore += 2;
+        else bearishScore += 1;
+
+        if (macd > macdSignal) bullishScore += 2;
+        else bearishScore += 2;
+
+        if (macdHistogram > 0) bullishScore += 1;
+        else bearishScore += 1;
+
+        if (shortMA > longMA) bullishScore += 2;
+        else bearishScore += 2;
+
+        if (priceTrend > 0) bullishScore += 1;
+        else bearishScore += 1;
+
+        if (volumeChange > 0.15) bullishScore += 1;
+        else if (volumeChange < -0.15) bearishScore += 1;
+
+        const totalScore = bullishScore + bearishScore || 1;
+        const bullishProbability = bullishScore / totalScore;
+        const bearishProbability = bearishScore / totalScore;
+        const confidence = Math.abs(bullishProbability - bearishProbability) * 100;
+
+        const summary =
+          bullishProbability >= bearishProbability
+            ? `RSI ${rsi.toFixed(1)} (neutral -> bullish), MACD positive crossover, volume ${formatPercent(volumeChange)} vs avg.`
+            : `RSI ${rsi.toFixed(1)} (overbought), MACD trending negative, volume ${formatPercent(volumeChange)} vs avg.`;
+
+        const rationaleParts = [];
+        if (rsi < 30) rationaleParts.push("RSI oversold");
+        else if (rsi > 70) rationaleParts.push("RSI overbought");
+        else rationaleParts.push("RSI neutral");
+
+        rationaleParts.push(macd > macdSignal ? "MACD above signal" : "MACD below signal");
+        rationaleParts.push(shortMA > longMA ? "Short MA above long MA" : "Short MA below long MA");
+        rationaleParts.push(
+          volumeChange > 0
+            ? `Volume rising (${formatPercent(volumeChange)})`
+            : `Volume cooling (${formatPercent(volumeChange)})`
+        );
+
+        return {
+          bullishProbability,
+          bearishProbability,
+          confidence,
+          volumeChange,
+          summary,
+          rationale: rationaleParts.join(" | "),
+        };
+      }
+
+      watchlistForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const symbolInput = document.getElementById("ticker-input");
+        const typeSelect = document.getElementById("ticker-type");
+
+        const value = symbolInput.value;
+        if (!value.trim()) return;
+
+        await addToWatchlist(value, typeSelect.value);
+        symbolInput.value = "";
+      });
+
+      renderWatchlist();
+      renderTopPicks();
+      renderSummary();
+      renderAlerts();
+
+      autoDiscoverAssets().then(() => {
+        refreshTopPicks();
+        renderSummary();
+      });
+
+      setInterval(refreshAnalysis, 15 * 60 * 1000);
+      setInterval(() => {
+        if (state.watchlist.length === 0) {
+          autoDiscoverAssets().then(() => {
+            refreshTopPicks();
+            renderSummary();
+          });
+        }
+      }, 60 * 60 * 1000);
+    </script>
+  </body>
+</html>
+
